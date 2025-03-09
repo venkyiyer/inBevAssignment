@@ -7,7 +7,7 @@
 ### requirements.txt : All the necessary requirements
 ### Dockerfile: For Docker build
 
-# Working screenthots
+# Working screentshots
 
 ### Working screenshots with FastAPI endpoint
 ### Working Docker run but inaccessible localhost

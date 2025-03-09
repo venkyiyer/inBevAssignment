@@ -5,5 +5,5 @@ size_of_chunk = 1000
 overlap_of_chunk = 500
 embedding_model_name = "sentence-transformers/all-mpnet-base-v2"
 name_of_collection = "vec_db"
-vector_store_path = "./chroma_langchain_db"
+vector_store_path = "chroma_langchain_db"
 llm_temperature = 0

@@ -30,7 +30,6 @@ class Docutils:
 
     # chunking the documents and creating Document objects
     def document_chunking(self, loaded_docs):
-        print('Reached document chunking')
         text_splitter = CharacterTextSplitter(separator= config.separator_of_chunk,
                                               chunk_size = config.size_of_chunk,
                                               chunk_overlap = config.overlap_of_chunk)
@@ -55,7 +54,7 @@ class Docutils:
 
 obj = Docutils()
 files = obj.get_all_files()
-loaded_docs = obj.document_loader(files)
-doc_txt= obj.document_chunking(loaded_docs)
+loader_docs = obj.document_loader(files)
+doc_txt= obj.document_chunking(loader_docs)
 obj.create_vectorstore(doc_txt)
 print('Vector store saved locally!')

@@ -1,5 +1,6 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import ConversationalRetrievalChain
+from dotenv import load_dotenv
 from langchain_openai import OpenAI
 from langchain.vectorstores import Chroma
 from pydantic import BaseModel
@@ -7,9 +8,9 @@ from fastapi import FastAPI, HTTPException
 import config
 import os
 
-
+load_dotenv()
 app = FastAPI()
-os.environ["OPENAI_API_KEY"] = ""
+os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_AI_API_KEY")
 
 # Base model for text input
 class TextInput(BaseModel):
@@ -32,12 +33,15 @@ class Conversation:
 
     # Open AI api to converse. Vector store used as a retreiver
     def set_bot(self):
-        retreiver = self.vector_store.as_retriever(search_kwargs={"k": 4})
-        self.bot_chat = ConversationalRetrievalChain.from_llm(self.llm, 
-                                                              retreiver, 
-                                                              return_source_documents=True,
-                                                              get_chat_history = self.get_chat_history,
-                                                              verbose=True)
+        try:
+            retreiver = self.vector_store.as_retriever(search_kwargs={"k": 4})
+            self.bot_chat = ConversationalRetrievalChain.from_llm(self.llm, 
+                                                                retreiver, 
+                                                                return_source_documents=True,
+                                                                get_chat_history = self.get_chat_history,
+                                                                verbose=True)
+        except Exception as e:
+            return f"OpenAI error:{e}"
     
     # Prompts
     def generate_prompt(self, question):
@@ -60,7 +64,7 @@ class Conversation:
 
 # Fast API Endpoint
 @app.post("/start_chat")
-def start_conversation(input_data: TextInput):
+async def start_conversation(input_data: TextInput):
     try:
         user_text = input_data.text
         chat_bot = Conversation()
